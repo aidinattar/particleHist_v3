@@ -2,7 +2,6 @@
 #define ParticleMass_h
 
 
-
 #include "AnalysisSteering.h"
 #include <string>
 #include <vector>

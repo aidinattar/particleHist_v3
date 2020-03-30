@@ -24,6 +24,22 @@ int nBinD = 128;
 
 double mass ( const Event& ev );
 
+// concrete factory to create an ParticleMass analyzer
+class ParticleMassFactory: public AnalysisFactory::AbsFactory {
+ public:
+  // assign "plot" as name for this analyzer and factory
+  ParticleMassFactory(): AnalysisFactory::AbsFactory( "plot" ) {}
+  // create an ParticleMass when builder is run
+  virtual AnalysisSteering* create( const AnalysisInfo* info ) {
+    return new ParticleMass( info );
+  }
+};
+// create a global ParticleMassFactory, so that it is created and registered 
+// before main execution start:
+// when the AnalysisFactory::create function is run,
+// an ParticleMassFactory will be available with name "plot".
+static ParticleMassFactory er;
+
 ParticleMass::ParticleMass( const AnalysisInfo* info ):
  AnalysisSteering( info ) {
 }
@@ -52,8 +68,6 @@ void ParticleMass::endJob() {
   TDirectory* currentDir = gDirectory;
   // open histogram file
   TFile* file = new TFile( aInfo->value( "plot" ).c_str(), "RECREATE" );
-
-  std::cout << aInfo->value( "plot" ).c_str() << std::endl;
 
   // loop over elements
   int n = pList.size();
